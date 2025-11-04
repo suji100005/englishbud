@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- [v21] 타이틀 업데이트 -->
     <title>English Bird Library (v21 - Full Fix)</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,8 +21,7 @@
         .progress-checkbox { appearance: none; width: 1.25rem; height: 1.25rem; border: 2px solid #a8a29e; border-radius: 0.25rem; display: inline-block; vertical-align: middle; position: relative; cursor: default; }
         .progress-checkbox:checked::before { content: '✔'; font-size: 0.75rem; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         textarea.admin-textarea { font-family: monospace; }
-        
-        .admin-list-item { background-color: #fff; border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .admin-list-item { background-color: #fff; border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
         .admin-list-item p { margin: 0; }
         .admin-list-item .title { font-weight: 600; color: #7c2d12; }
         .admin-list-item .detail { font-size: 0.875rem; color: #78716c; }
@@ -34,22 +33,12 @@
 </head>
 <body class="min-h-screen">
 
-    <!-- 
-      ==================================================================
-      0. 로딩 스크린
-      ==================================================================
-    -->
     <div id="app-loading-screen" class="fixed inset-0 bg-stone-100 flex flex-col items-center justify-center z-50">
         <div class="loader"></div>
         <h1 class="text-2xl font-bold text-amber-800 mt-4">English Bird Library</h1>
         <p id="app-loading-status" class="text-stone-600">Initializing...</p>
     </div>
 
-    <!-- 
-      ==================================================================
-      1. 학생 선택 화면
-      ==================================================================
-    -->
     <div id="student-selection-screen" class="hidden p-4 md:p-8">
         <header class="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8 text-center">
             <h1 class="text-4xl font-bold text-amber-800">
@@ -67,11 +56,6 @@
         </footer>
     </div>
 
-    <!-- 
-      ==================================================================
-      1.5. 관리자 모드 화면
-      ==================================================================
-    -->
     <div id="admin-panel-screen" class="hidden p-4 md:p-8">
         <header class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8">
             <div class="flex justify-between items-center">
@@ -87,14 +71,12 @@
         </header>
         
         <main class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-            <!-- Admin Tabs -->
             <div class="flex border-b border-stone-300 mb-6">
                 <div id="tab-manage-students" class="admin-tab active">학생 관리</div>
                 <div id="tab-manage-books" class="admin-tab">도서 관리</div>
                 <div id="tab-bulk-import" class="admin-tab">데이터 일괄 등록</div>
             </div>
 
-            <!-- 1. 학생 관리 패널 -->
             <div id="admin-panel-manage-students" class="admin-tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-amber-900">Student List</h2>
@@ -103,11 +85,9 @@
                     </button>
                 </div>
                 <div id="admin-student-list-container" class="max-h-96 overflow-y-auto bg-stone-100 p-4 rounded-lg">
-                    <!-- 학생 목록이 여기에 동적으로 삽입됩니다 -->
                 </div>
             </div>
 
-            <!-- 2. 도서 관리 패널 -->
             <div id="admin-panel-manage-books" class="admin-tab-content hidden">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-amber-900">Book List</h2>
@@ -116,26 +96,22 @@
                     </button>
                 </div>
                 <div id="admin-book-list-container" class="max-h-96 overflow-y-auto bg-stone-100 p-4 rounded-lg">
-                    <!-- 도서 목록이 여기에 동적으로 삽입됩니다 -->
                 </div>
             </div>
 
-            <!-- 3. 일괄 등록 패널 -->
             <div id="admin-panel-bulk-import" class="admin-tab-content hidden">
-                <!-- 학생 일괄 등록 -->
                 <div class="mb-6 p-4 border border-stone-300 rounded-lg">
                     <h2 class="text-xl font-semibold text-amber-900 mb-4">Bulk Import Students</h2>
-                    <p class="text-stone-600 mb-2">엑셀에서 **id, name, login, pass** 4개 열을 복사하여 붙여넣으세요. (탭으로 구분)</p>
-                    <textarea id="student-input" rows="5" class="admin-textarea w-full p-3 bg-stone-100 border-none rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-stone-800" placeholder="s1	김철수	cheolsu_kim	pass123!"></textarea>
+                    <p class="text-stone-600 mb-2">엑셀에서 <strong>id, name, login, pass</strong> 4개 열을 복사하여 붙여넣으세요. (탭으로 구분)</p>
+                    <textarea id="student-input" rows="5" class="admin-textarea w-full p-3 bg-stone-100 border-none rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-stone-800" placeholder="Paste tab-separated student rows here..."></textarea>
                     <button id="bulk-import-student" class="mt-3 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-semibold flex items-center gap-2">
                         <span class="material-symbols-outlined">upload</span> Save Students to DB
                     </button>
                 </div>
-                <!-- 도서 일괄 등록 -->
                 <div class="p-4 border border-stone-300 rounded-lg">
                     <h2 class="text-xl font-semibold text-amber-900 mb-4">Bulk Import Books</h2>
-                    <p class="text-stone-600 mb-2">엑셀/PDF에서 **level, title, quizNumber** 3개 열을 복사하여 붙여넣으세요. (탭으로 구분)</p>
-                    <textarea id="book-input" rows="5" class="admin-textarea w-full p-3 bg-stone-100 border-none rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-stone-800" placeholder="1.2	Green Eggs and Ham	1001&#10;8.3	Oklahoma Girl...	800187"></textarea>
+                    <p class="text-stone-600 mb-2">엑셀/PDF에서 <strong>level, title, quizNumber</strong> 3개 열을 복사하여 붙여넣으세요. (탭으로 구분)</p>
+                    <textarea id="book-input" rows="5" class="admin-textarea w-full p-3 bg-stone-100 border-none rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-stone-800" placeholder="Paste tab-separated book rows here..."></textarea>
                     <button id="bulk-import-book" class="mt-3 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-semibold flex items-center gap-2">
                         <span class="material-symbols-outlined">upload</span> Save Books to DB
                     </button>
@@ -145,11 +121,6 @@
         </main>
     </div>
 
-    <!-- 
-      ==================================================================
-      2. 레벨 선택 화면
-      ==================================================================
-    -->
     <div id="level-selection-screen" class="hidden p-4 md:p-8">
         <header class="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8">
             <div class="flex justify-between items-center">
@@ -163,11 +134,6 @@
         <main id="level-grid" class="max-w-xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4"></main>
     </div>
 
-    <!-- 
-      ==================================================================
-      3. 라이브러리 화면
-      ==================================================================
-    -->
     <div id="library-screen" class="hidden">
         <header class="max-w-full bg-white shadow-md p-4 md:p-6 sticky top-0 z-10">
             <div class="max-w-xl mx-auto w-full">
@@ -181,7 +147,7 @@
                     </button>
                 </div>
                 <div class="relative">
-                    <input type="text" id="search-input" placeholder="Search book title..." class="w-full p-4 pl-12 bg-white border-none rounded-xl shadow-md focus:ring-2 focus:ring-amber-500 outline-none text-lg">
+                    <input type="text" id="search-input" placeholder="Search book title..." class="w-full p-4 pl-12 bg-white border-none rounded-xl shadow-md focus:ring-2 focus:ring-amber-500 outline-none">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">search</span>
                 </div>
             </div>
@@ -192,11 +158,6 @@
         </main>
     </div>
     
-    <!-- 
-      ==================================================================
-      4. '나의 서재' 화면
-      ==================================================================
-    -->
     <div id="my-library-screen" class="hidden">
         <header class="max-w-full bg-white shadow-md p-4 md:p-6 sticky top-0 z-10">
             <div class="max-w-xl mx-auto w-full flex justify-between items-center">
@@ -207,7 +168,7 @@
                     <span class="material-symbols-outlined text-3xl">library_books</span>
                     My Library
                 </h1>
-                <div class="w-10"></div> 
+                <div class="w-10"></div>
             </div>
         </header>
         <main class="max-w-xl mx-auto p-4 md:p-8">
@@ -215,12 +176,6 @@
         </main>
     </div>
 
-    <!-- 
-      ==================================================================
-      5. 학생/도서 모달
-      ==================================================================
-    -->
-    
     <div id="student-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-40 modal-backdrop">
         <div class="modal-content admin-form-modal w-full max-w-md p-6 transform scale-95">
             <div class="flex justify-between items-center mb-6">
@@ -252,7 +207,7 @@
             </form>
         </div>
     </div>
-    
+
     <div id="book-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-40 modal-backdrop">
         <div class="modal-content admin-form-modal w-full max-w-md p-6 transform scale-95">
             <div class="flex justify-between items-center mb-6">
@@ -292,76 +247,84 @@
             <div class="bg-white rounded-lg p-4 shadow-inner mb-6">
                 <h3 class="text-lg font-bold text-amber-800 mb-3 text-center">My Progress</h3>
                 <div class="space-y-3">
-                    <div class="flex items-center"><input type="checkbox" id="progress-audio" class="progress-checkbox" disabled><label for="progress-audio" class="ml-2 text-stone-700 text-lg">Listen to Audio</label></div>
-                    <div class="flex items-center"><input type="checkbox" id="progress-quiz" class="progress-checkbox" disabled><label for="progress-quiz" class="ml-2 text-stone-700 text-lg">Take Quiz</label></div>
-                    <div class="flex items-center"><input type="checkbox" id="progress-report" class="progress-checkbox" disabled><label for="progress-report" class="ml-2 text-stone-700 text-lg">Write Report</label></div>
+                    <div class="flex items-center"><input type="checkbox" id="progress-audio" class="progress-checkbox" disabled><label for="progress-audio" class="ml-2 text-stone-700 text-lg">Listen to audio</label></div>
+                    <div class="flex items-center"><input type="checkbox" id="progress-quiz" class="progress-checkbox" disabled><label for="progress-quiz" class="ml-2 text-stone-700 text-lg">Take quiz</label></div>
+                    <div class="flex items-center"><input type="checkbox" id="progress-report" class="progress-checkbox" disabled><label for="progress-report" class="ml-2 text-stone-700 text-lg">Write report</label></div>
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-3">
-                <a id="modal-audio-button" href="#" target="_blank" class="flex items-center justify-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold"><span class="material-symbols-outlined mr-3">headphones</span> <span>Listen to Audio</span></a>
-                <button id="modal-quiz-button" class="flex items-center justify-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold"><span class="material-symbols-outlined mr-3">quiz</span> <span>Take Quiz</span></button>
-                <button id="modal-report-button" class="flex items-center justify-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold"><span class="material-symbols-outlined mr-3">edit_document</span> <span>Write Report</span></button>
-                <a id="modal-dict-button" href="#" target="_blank" class="flex items-center justify-center p-4 bg-stone-700 text-white rounded-lg shadow-md hover:bg-stone-800 transition-colors font-semibold"><span class="material-symbols-outlined mr-3">search</span> <span>Search Dictionary</span></a>
+                <a id="modal-audio-button" href="#" target="_blank" class="flex items-center justify-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold">Open Audio</a>
+                <button id="modal-quiz-button" class="flex items-center justify-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold"><span class="material-symbols-outlined">quiz</span> Open Quiz</button>
+                <button id="modal-report-button" class="flex items-center justify-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold"><span class="material-symbols-outlined">edit_document</span> Write Report</button>
+                <a id="modal-dict-button" href="#" target="_blank" class="flex items-center justify-center p-4 bg-stone-700 text-white rounded-lg shadow-md hover:bg-stone-800 transition-colors font-semibold">Dictionary</a>
             </div>
         </div>
     </div>
 
     <div id="login-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 modal-backdrop">
         <div id="login-modal-content" class="modal-content w-full max-w-md p-6 transform scale-95">
-            <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-amber-800 flex items-center gap-2"><span class="material-symbols-outlined text-3xl">login</span> Login Helper</h2><button id="close-login-modal-button" class="text-stone-400 hover:text-stone-600 text-3xl material-symbols-outlined">close</button></div>
+            <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-amber-800 flex items-center gap-2"><span class="material-symbols-outlined text-3xl">login</span> Login Info</h2></div>
             <p id="modal-student-name" class="text-lg text-stone-600 mb-6"></p>
             <div class="space-y-4">
-                 <div><label class="text-sm font-semibold text-stone-500">Renaissance ID</label><div class="flex gap-2 mt-1"><input id="modal-student-login" type="text" readonly class="flex-1 p-3 bg-stone-200 rounded-lg border-none text-stone-800"><button data-target="modal-student-login" class="copy-button px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-sm">content_copy</span> Copy</button></div></div>
-                <div><label class="text-sm font-semibold text-stone-500">Password</label><div class="flex gap-2 mt-1"><input id="modal-student-pass" type="text" readonly class="flex-1 p-3 bg-stone-200 rounded-lg border-none text-stone-800"><button data-target="modal-student-pass" class="copy-button px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-sm">content_copy</span> Copy</button></div></div>
+                 <div><label class="text-sm font-semibold text-stone-500">Renaissance ID</label><div class="flex gap-2 mt-1"><input id="modal-student-login" type="text" readonly class="flex-1 p-3 bg-stone-200 rounded-lg"><button class="copy-button p-2 bg-stone-300 rounded-lg" data-target="modal-student-login">Copy</button></div></div>
+                <div><label class="text-sm font-semibold text-stone-500">Password</label><div class="flex gap-2 mt-1"><input id="modal-student-pass" type="text" readonly class="flex-1 p-3 bg-stone-200 rounded-lg"><button class="copy-button p-2 bg-stone-300 rounded-lg" data-target="modal-student-pass">Copy</button></div></div>
             </div>
             <p id="copy-feedback" class="text-green-600 text-center h-5 mt-4 text-sm"></p>
-            <a id="go-to-quiz-site" href="#" target="_blank" class="block w-full text-center p-4 mt-6 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors text-lg font-semibold flex items-center justify-center gap-2">Go to Quiz Site <span class="material-symbols-outlined">open_in_new</span></a>
+            <a id="go-to-quiz-site" href="#" target="_blank" class="block w-full text-center p-4 mt-6 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors text-lg font-semibold">Open Quiz Site</a>
+            <div class="mt-4 text-right"><button id="close-login-modal-button" class="px-4 py-2 bg-stone-200 rounded-lg">Close</button></div>
         </div>
     </div>
     
     <div id="report-template-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-30 modal-backdrop">
         <div id="report-template-content" class="modal-content w-full max-w-md p-6 transform scale-95">
-            <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-amber-800 flex items-center gap-2"><span class="material-symbols-outlined text-3xl">edit_document</span> Select Report Type</h2><button id="close-template-modal-button" class="text-stone-400 hover:text-stone-600 text-3xl material-symbols-outlined">close</button></div>
+            <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-amber-800 flex items-center gap-2"><span class="material-symbols-outlined text-3xl">edit_document</span> Report Template</h2></div>
             <p class="text-lg text-stone-600 mb-6">어떤 양식으로 독후감을 작성할까요?</p>
             <div id="template-list" class="space-y-3"></div>
+            <div class="mt-4 text-right"><button id="close-template-modal-button" class="px-4 py-2 bg-stone-200 rounded-lg">Close</button></div>
         </div>
     </div>
-    
-    <!-- 
-      ==================================================================
-      8. Firebase SDK 임포트
-      ==================================================================
-    -->
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, writeBatch, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        let db, auth, appId;
-        let studentData = []; 
-        let bookData = [];    
+        let db = null, auth = null, appId = null;
+        let studentData = [];
+        let bookData = [];
 
-        // ======================================================================
-        // [중요!] ⚙️ 1. 기본 설정 ⚙️
-        // ======================================================================
         const config = {
-            quizProgramUrl: "https://global-zone60.renaissance-go.com/welcomeportal/rpna67ed", 
+            quizProgramUrl: "https://global-zone60.renaissance-go.com/welcomeportal/rpna67ed",
             quizSearchUrlTemplate: "https://your-renaissance-site.com/search?q=QUIZ_NUMBER_HERE",
             bookReportTemplates: [
                 { name: "기본 독후감 (Basic)", url: "#YOUR_TEMPLATE_1_COPY_LINK" },
-                { name: "심화 독후감 (Advanced)", url: "#YOUR_TEMPLATE_2_COPY_LINK" },
+                { name: "심화 독후감 (Advanced)", url: "#YOUR_TEMPLATE_2_COPY_LINK" }
             ],
             dictionaryUrl: "https://en.dict.naver.com/"
         };
 
-        // --- 이 아래 부분은 수정하실 필요 없습니다 ---
-        
-        let currentStudent = null;
-        let currentOpenBook = null; 
-        let currentLevelRange = null; 
-        let currentReadingHistory = []; 
+        // Firebase initialization placeholder - replace with your project's config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            // ... other Firebase config fields as needed
+        };
+        try {
+            const firebaseApp = initializeApp(firebaseConfig);
+            auth = getAuth(firebaseApp);
+            db = getFirestore(firebaseApp);
+            // appId is used in Firestore path; set to your identifier
+            appId = "YOUR_APP_ID";
+        } catch (err) {
+            console.warn('Firebase init failed or placeholders in use:', err);
+        }
 
-        // --- 전역 DOM 요소 ---
+        let currentStudent = null;
+        let currentOpenBook = null;
+        let currentLevelRange = null;
+        let currentReadingHistory = [];
+
         const appLoadingScreen = document.getElementById('app-loading-screen');
         const appLoadingStatus = document.getElementById('app-loading-status');
         const studentScreen = document.getElementById('student-selection-screen');
@@ -395,7 +358,6 @@
         const closeLoginModalButton = document.getElementById('close-login-modal-button');
         const copyFeedback = document.getElementById('copy-feedback');
 
-        // Admin DOM Elements
         const adminTabs = document.querySelectorAll('.admin-tab');
         const adminTabContents = document.querySelectorAll('.admin-tab-content');
         const adminStudentListContainer = document.getElementById('admin-student-list-container');
@@ -416,702 +378,46 @@
         const deleteBookButton = document.getElementById('delete-book-button');
         const closeBookFormModal = document.getElementById('close-book-form-modal');
         const bulkImportFeedback = document.getElementById('bulk-import-feedback');
-        
-        
-        // --- DB Collection 경로 ---
+
         const studentCollectionPath = () => collection(db, 'artifacts', appId, 'public', 'data', 'students');
         const bookCollectionPath = () => collection(db, 'artifacts', appId, 'public', 'data', 'books');
-        
-        // --- [v19] PERMISSION FIX: DB 경로 수정 ---
-        
-        // (학생 학습이력 - 'users' -> 'public/data/studentHistory' 경로로 변경)
+
         async function fetchReadingHistory(studentId) {
             if (!studentId || !db) return [];
-            // [v19] FIX: Permissions error. Changed path from private 'users' to public 'public/data'
             const historyCollectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'studentHistory', studentId, 'readingHistory');
             try {
                 const querySnapshot = await getDocs(historyCollectionPath);
-                const history = []; querySnapshot.forEach((doc) => history.push(doc.data()));
-                currentReadingHistory = history; 
+                const history = []; querySnapshot.forEach((d) => history.push(d.data()));
+                currentReadingHistory = history;
                 return history;
-            } catch (error) { console.error("Error fetching history: ", error); return []; }
+            } catch (error) { console.error('Error fetching history: ', error); return []; }
         }
-        
-        // [v19] PERMISSION FIX: 경로 수정
+
         async function getBookProgress(studentId, bookQuizNumber) {
-            if (!studentId || !bookQuizNumber) return null;
-            // [v19] FIX: Permissions error. Changed path from private 'users' to public 'public/data'
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'studentHistory', studentId, 'readingHistory', bookQuizNumber);
-            try { 
-                const docSnap = await getDoc(docRef); 
-                return docSnap.exists() ? docSnap.data() : null; 
-            } 
-            catch (error) { console.error("Error getting book progress: ", error); return null; }
+            if (!studentId || !bookQuizNumber || !db) return null;
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'studentHistory', studentId, 'readingHistory', String(bookQuizNumber));
+            try { const docSnap = await getDoc(docRef); return docSnap.exists() ? docSnap.data() : null; } catch (error) { console.error('Error getting book progress: ', error); return null; }
         }
-        
-        // [v19] PERMISSION FIX: 경로 수정
+
         async function updateBookProgress(studentId, book, taskToUpdate) {
             if (!studentId || !book || !taskToUpdate || !db || !book.quizNumber) return;
-            // [v19] FIX: Permissions error. Changed path from private 'users' to public 'public/data'
-            const bookDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'studentHistory', studentId, 'readingHistory', book.quizNumber);
-            
-            let currentProgressData = await getBookProgress(studentId, book.quizNumber); 
-            
+            const bookDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'studentHistory', studentId, 'readingHistory', String(book.quizNumber));
+            let currentProgressData = await getBookProgress(studentId, book.quizNumber);
             if (!currentProgressData) {
-                const bookInfoToSave = { 
-                    quizNumber: book.quizNumber, 
-                    title: book.title, 
-                    level: book.level 
-                };
-                currentProgressData = { 
-                    ...bookInfoToSave, 
-                    status: 'reading', 
-                    progress: { audio: false, quiz: false, report: false } 
-                };
+                const bookInfoToSave = { quizNumber: book.quizNumber, title: book.title, level: book.level };
+                currentProgressData = { ...bookInfoToSave, status: 'reading', progress: { audio: false, quiz: false, report: false } };
             }
-            
+            currentProgressData.progress = currentProgressData.progress || { audio:false, quiz:false, report:false };
             currentProgressData.progress[taskToUpdate] = true;
             const { audio, quiz, report } = currentProgressData.progress;
             currentProgressData.status = (audio && quiz && report) ? 'completed' : 'reading';
-            
             try {
                 await setDoc(bookDocRef, currentProgressData);
-                const index = currentReadingHistory.findIndex(b => b.quizNumber === book.quizNumber);
-                if (index > -1) { 
-                    currentReadingHistory[index] = currentProgressData; 
-                } else { 
-                    currentReadingHistory.push(currentProgressData); 
-                }
-                return currentProgressData; 
-            } catch (error) { console.error("Error updating book progress: ", error); }
+                const index = currentReadingHistory.findIndex(b => String(b.quizNumber) === String(book.quizNumber));
+                if (index > -1) { currentReadingHistory[index] = currentProgressData; } else { currentReadingHistory.push(currentProgressData); }
+                return currentProgressData;
+            } catch (error) { console.error('Error updating book progress: ', error); }
         }
 
-        // --- 학생/도서 목록 DB Fetch 함수 ---
         async function fetchStudentsFromDB() {
-            appLoadingStatus.textContent = "Loading student list...";
-            const querySnapshot = await getDocs(studentCollectionPath());
-            const students = [];
-            querySnapshot.forEach((doc) => students.push({ id: doc.id, ...doc.data() }));
-            studentData = students.sort((a,b) => a.name.localeCompare(b.name)); // 이름순 정렬
-            return studentData;
-        }
-        async function fetchBooksFromDB() {
-            appLoadingStatus.textContent = "Loading book library... (may take a moment)";
-            const querySnapshot = await getDocs(bookCollectionPath());
-            const books = [];
-            querySnapshot.forEach((doc) => books.push({ quizNumber: doc.id, ...doc.data() }));
-            bookData = books;
-            return bookData;
-        }
-
-        // --- '나의 서재' 화면 그리기 ---
-        async function renderMyLibrary() {
-            myLibraryList.innerHTML = `<div class="loader col-span-full"></div><p class="col-span-full text-center text-stone-500 text-lg">Loading...</p>`;
-            const history = currentReadingHistory;
-            myLibraryList.innerHTML = ''; 
-            if (history.length === 0) {
-                myLibraryList.innerHTML = `<p class="col-span-full text-center text-stone-500 text-lg">아직 시작한 책이 없습니다.</p>`;
-                return;
-            }
-            history.forEach(book => { myLibraryList.innerHTML += createBookCardHTML(book); });
-        }
-        myLibraryButton.addEventListener('click', async () => {
-            await renderMyLibrary(); 
-            libraryScreen.classList.add('hidden');
-            myLibraryScreen.classList.remove('hidden');
-        });
-        backToMainLibraryButton.addEventListener('click', () => {
-            myLibraryScreen.classList.add('hidden');
-            libraryScreen.classList.remove('hidden');
-            renderFilteredLibrary(currentLevelRange, searchInput.value); 
-        });
-
-        // --- 필터링된 라이브러리 그리기 ---
-        function renderFilteredLibrary(range, searchQuery) {
-            bookList.innerHTML = '';
-            searchQuery = searchQuery.toLowerCase();
-            let foundBooks = 0;
-            const filteredBooks = bookData.filter(book => {
-                const level = parseFloat(book.level);
-                // [v21] FIX: level이 유효하지 않으면(e.g. "") 필터링
-                if (isNaN(level) || !book.title) return false;
-                
-                const matchesLevel = Math.floor(level) === range;
-                const matchesSearch = book.title.toLowerCase().includes(searchQuery);
-                return matchesLevel && matchesSearch;
-            });
-            filteredBooks.forEach(book => {
-                bookList.innerHTML += createBookCardHTML(book);
-                foundBooks++;
-            });
-            noBooksFound.classList.toggle('hidden', foundBooks > 0);
-        }
-        
-        // [v16] UI 수정: 책 표지 이미지 제거
-        function createBookCardHTML(book) {
-            const progressData = currentReadingHistory.find(b => b.quizNumber === book.quizNumber);
-            
-            let badgeHTML = '';
-            if (progressData) {
-                if (progressData.status === 'completed') {
-                    badgeHTML = `<span class="absolute top-4 right-4 px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">✅ Completed</span>`;
-                } else {
-                    const progressCount = (progressData.progress.audio ? 1:0) + (progressData.progress.quiz ? 1:0) + (progressData.progress.report ? 1:0);
-                    badgeHTML = `<span class="absolute top-4 right-4 px-2 py-0.5 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full">🌱 ${progressCount}/3</span>`;
-                }
-            }
-            // [v21] FIX: book.title이 없는 경우를 대비 (하지만 필터에서 걸러짐)
-            return `
-            <button class="book-card-button w-full bg-white p-4 rounded-xl shadow-md text-left flex items-center gap-4 hover:shadow-lg transition-shadow relative" data-book-quiz="${book.quizNumber}">
-                <div class="flex-1 overflow-hidden">
-                    <h3 class="text-lg font-bold text-amber-900 truncate">${book.title || 'No Title'}</h3>
-                    <p class="text-sm text-stone-500">ATOS Level ${book.level || 'N/A'}</p>
-                    <p class="text-sm text-stone-400">Quiz # ${book.quizNumber || 'N/A'}</p>
-                </div>
-                ${badgeHTML}
-            </button>`;
-        }
-        
-        searchInput.addEventListener('input', (e) => {
-            renderFilteredLibrary(currentLevelRange, e.target.value);
-        });
-
-        // --- 레벨 선택 화면 그리기 ---
-        function renderLevelSelectionScreen() {
-            levelGrid.innerHTML = '';
-            levelWelcomeTitle.textContent = `Welcome, ${currentStudent.name}!`;
-            const levelRanges = new Set(bookData.map(book => {
-                // [v21] FIX: level이 유효하지 않으면(e.g. "") NaN이 됨
-                const level = parseFloat(book.level);
-                return isNaN(level) ? null : Math.floor(level);
-            }).filter(level => level !== null)); // null (NaN) 제거
-            
-            const sortedRanges = [...levelRanges].sort((a, b) => a - b);
-            
-            sortedRanges.forEach(range => {
-                const button = document.createElement('button');
-                button.className = "level-button bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg hover:bg-amber-50 transition-all transform hover:-translate-y-1";
-                let iconName = `filter_${range}`;
-                if(range < 0 || range > 9) iconName = 'filter_9_plus';
-                button.innerHTML = `
-                    <span class="material-symbols-outlined text-5xl text-amber-600">${iconName}</span>
-                    <span class="block text-2xl font-semibold text-amber-900 mt-3">${range}.x Level</span>
-                    <span class="block text-stone-500">(${range}점대)</span>
-                `;
-                button.dataset.levelRange = range;
-                button.addEventListener('click', () => handleLevelSelect(range));
-                levelGrid.appendChild(button);
-            });
-        }
-        
-        // --- 화면 전환 로직 ---
-        async function handleStudentSelect(studentId) {
-            currentStudent = studentData.find(s => s.id === studentId);
-            if (!currentStudent) return;
-            appLoadingScreen.classList.remove('hidden');
-            appLoadingStatus.textContent = `Loading ${currentStudent.name}'s library...`;
-            await fetchReadingHistory(currentStudent.id); 
-            renderLevelSelectionScreen();
-            studentScreen.classList.add('hidden');
-            levelScreen.classList.remove('hidden');
-            appLoadingScreen.classList.add('hidden');
-        }
-        function handleLevelSelect(range) {
-            currentLevelRange = range;
-            libraryTitle.textContent = `${range}.x Level Books`;
-            searchInput.value = '';
-            renderFilteredLibrary(range, ""); 
-            levelScreen.classList.add('hidden');
-            libraryScreen.classList.remove('hidden');
-        }
-        function logout() {
-            currentStudent = null; currentLevelRange = null; currentReadingHistory = [];
-            libraryScreen.classList.add('hidden');
-            levelScreen.classList.add('hidden');
-            myLibraryScreen.classList.add('hidden'); 
-            adminPanelScreen.classList.add('hidden');
-            studentScreen.classList.remove('hidden');
-        }
-        logoutButtonLevel.addEventListener('click', logout);
-        backToLevelSelectButton.addEventListener('click', () => {
-            libraryScreen.classList.add('hidden');
-            levelScreen.classList.remove('hidden');
-        });
-        
-        // --- 관리자 모드 버튼 이벤트 ---
-        adminModeButton.addEventListener('click', () => {
-            studentScreen.classList.add('hidden');
-            adminPanelScreen.classList.remove('hidden');
-            renderAdminStudentList(); // 관리자 패널 첫 로드
-            setActiveTab('manage-students');
-        });
-        adminBackButton.addEventListener('click', logout);
-
-        // --- 모달 및 이벤트 핸들러 ---
-        bookList.addEventListener('click', function(event) {
-            const bookButton = event.target.closest('.book-card-button');
-            if (bookButton) {
-                const quizNum = bookButton.dataset.bookQuiz;
-                const book = bookData.find(b => b.quizNumber === quizNum);
-                showBookDetailsModal(book);
-            }
-        });
-        myLibraryList.addEventListener('click', function(event) {
-            const bookButton = event.target.closest('.book-card-button');
-            if (bookButton) {
-                const quizNum = bookButton.dataset.bookQuiz;
-                const book = currentReadingHistory.find(b => b.quizNumber === quizNum);
-                if (book) showBookDetailsModal(book);
-            }
-        });
-        
-        async function showBookDetailsModal(book) {
-            if (!book) return;
-            currentOpenBook = book; 
-            const googleDriveSearchUrl = `https://drive.google.com/drive/search?q=${encodeURIComponent(book.title)}`;
-            
-            document.getElementById('modal-book-title').textContent = book.title;
-            document.getElementById('modal-book-level').textContent = `ATOS Level ${book.level} | Quiz # ${book.quizNumber || 'N/A'}`;
-            
-            document.getElementById('modal-audio-button').href = googleDriveSearchUrl;
-            document.getElementById('modal-dict-button').href = config.dictionaryUrl;
-            
-            const progressData = await getBookProgress(currentStudent.id, book.quizNumber); 
-            document.getElementById('progress-audio').checked = progressData?.progress?.audio || false;
-            document.getElementById('progress-quiz').checked = progressData?.progress?.quiz || false;
-            document.getElementById('progress-report').checked = progressData?.progress?.report || false;
-            showModal(bookModal, bookModalContent);
-        }
-        
-        function showLoginHelperModal() {
-            if (!currentStudent) return;
-            document.getElementById('modal-student-name').textContent = `Login info for ${currentStudent.name}:`;
-            document.getElementById('modal-student-login').value = currentStudent.login;
-            document.getElementById('modal-student-pass').value = currentStudent.pass;
-            document.getElementById('go-to-quiz-site').href = config.quizProgramUrl;
-            copyFeedback.textContent = '';
-            showModal(loginModal, loginModalContent);
-        }
-        function showTemplateModal() {
-            if (!currentOpenBook) return;
-            templateListContainer.innerHTML = ''; 
-            config.bookReportTemplates.forEach(template => {
-                const templateButton = document.createElement('a');
-                templateButton.href = template.url; templateButton.target = "_blank"; 
-                templateButton.className = "template-button block w-full text-center p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition-colors font-semibold flex items-center justify-center gap-2";
-                templateButton.innerHTML = `<span class="material-symbols-outlined">description</span> ${template.name}`;
-                templateButton.addEventListener('click', async () => {
-                    await updateBookProgress(currentStudent.id, currentOpenBook, 'report');
-                    hideModal(templateModal, templateModalContent); 
-                });
-                templateListContainer.appendChild(templateButton);
-            });
-            showModal(templateModal, templateModalContent);
-        }
-        function showModal(modal, content) {
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.add('opacity-100'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
-        }
-        function hideModal(modal, content) {
-            content.classList.remove('scale-100'); content.classList.add('scale-95');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => { modal.classList.add('hidden'); }, 200);
-        }
-        closeBookModalButton.addEventListener('click', () => hideModal(bookModal, bookModalContent));
-        bookModal.addEventListener('click', (e) => { if (e.target === bookModal) hideModal(bookModal, bookModalContent); });
-        
-        document.getElementById('modal-audio-button').addEventListener('click', async () => {
-            await updateBookProgress(currentStudent.id, currentOpenBook, 'audio');
-            document.getElementById('progress-audio').checked = true;
-        });
-        document.getElementById('modal-quiz-button').addEventListener('click', async () => {
-            await updateBookProgress(currentStudent.id, currentOpenBook, 'quiz');
-            document.getElementById('progress-quiz').checked = true;
-            const quizNum = currentOpenBook.quizNumber;
-            const urlTemplate = config.quizSearchUrlTemplate;
-            if (quizNum && urlTemplate && urlTemplate.includes("QUIZ_NUMBER_HERE")) {
-                window.open(urlTemplate.replace("QUIZ_NUMBER_HERE", encodeURIComponent(quizNum)), '_blank');
-            } else {
-                window.open(config.quizProgramUrl, '_blank');
-            }
-            hideModal(bookModal, bookModalContent);
-            setTimeout(showLoginHelperModal, 210); 
-        });
-        document.getElementById('modal-report-button').addEventListener('click', () => {
-            hideModal(bookModal, bookModalContent);
-            setTimeout(showTemplateModal, 210); 
-        });
-        closeTemplateModalButton.addEventListener('click', () => hideModal(templateModal, templateModalContent));
-        templateModal.addEventListener('click', (e) => { if (e.target === templateModal) hideModal(templateModal, templateModalContent); });
-        closeLoginModalButton.addEventListener('click', () => hideModal(loginModal, loginModalContent));
-        loginModal.addEventListener('click', (e) => { if (e.target === loginModal) hideModal(loginModal, loginModalContent); });
-        
-        function copyLoginHelper(text) {
-            const ta = document.createElement('textarea');
-            ta.value = text; ta.style.position = 'absolute'; ta.style.left = '-9999px';
-            document.body.appendChild(ta); ta.select();
-            try { document.execCommand('copy'); copyFeedback.textContent = `Copied!`; } 
-            catch (err) { copyFeedback.textContent = 'Copy failed.'; }
-            document.body.removeChild(ta);
-            setTimeout(() => { copyFeedback.textContent = ''; }, 2000);
-        }
-        document.querySelectorAll('.copy-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const targetId = e.target.closest('[data-target]').dataset.target;
-                const textToCopy = document.getElementById(targetId).value;
-                copyLoginHelper(textToCopy);
-            });
-        });
-
-        // --- 학생 선택 화면 그리기 ---
-        function renderStudentSelection() {
-            studentGrid.innerHTML = '';
-            studentData.forEach(student => {
-                const button = document.createElement('button');
-                button.className = "student-button bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg hover:bg-amber-50 transition-all transform hover:-translate-y-1";
-                button.innerHTML = `
-                    <span class="material-symbols-outlined text-5xl text-amber-600">account_circle</span>
-                    <span class="block text-xl font-semibold text-amber-900 mt-3">${student.name}</span>
-                `;
-                button.dataset.studentId = student.id;
-                button.addEventListener('click', () => handleStudentSelect(student.id));
-                studentGrid.appendChild(button);
-            });
-        }
-        
-        // --- Admin Panel 탭 로직 ---
-        function setActiveTab(tabId) {
-            adminTabs.forEach(tab => tab.classList.remove('active'));
-            adminTabContents.forEach(content => content.classList.add('hidden'));
-            
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            document.getElementById(`admin-panel-${tabId}`).classList.remove('hidden');
-            
-            if(tabId === 'manage-students') renderAdminStudentList();
-            if(tabId === 'manage-books') renderAdminBookList();
-        }
-        adminTabs.forEach(tab => {
-            tab.addEventListener('click', (e) => setActiveTab(e.target.id.replace('tab-', '')));
-        });
-        
-        // --- Admin Panel: 학생/도서 목록 렌더링 ---
-        async function renderAdminStudentList() {
-            adminStudentListContainer.innerHTML = `<div class="loader"></div>`;
-            await fetchStudentsFromDB(); // studentData가 최신화됨
-            adminStudentListContainer.innerHTML = '';
-            if (studentData.length === 0) {
-                adminStudentListContainer.innerHTML = `<p class="text-center text-stone-500">No students found. Use 'Bulk Import' or 'Add Student'.</p>`;
-                return;
-            }
-            studentData.forEach(student => {
-                adminStudentListContainer.innerHTML += `
-                <div class="admin-list-item">
-                    <div>
-                        <p class="title">${student.name} (ID: ${student.id})</p>
-                        <p class="detail">Login: ${student.login} / Pass: ${student.pass}</p>
-                    </div>
-                    <button class="admin-edit-student-button p-2 bg-stone-200 text-stone-700 rounded-lg hover:bg-stone-300" data-student-id="${student.id}">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                </div>`;
-            });
-            document.querySelectorAll('.admin-edit-student-button').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const studentId = e.currentTarget.dataset.studentId;
-                    const student = studentData.find(s => s.id === studentId);
-                    showStudentForm(student);
-                });
-            });
-        }
-        async function renderAdminBookList() {
-            adminBookListContainer.innerHTML = `<div class="loader"></div>`;
-            await fetchBooksFromDB(); // bookData가 최신화됨
-            adminBookListContainer.innerHTML = '';
-            if (bookData.length === 0) {
-                adminBookListContainer.innerHTML = `<p class="text-center text-stone-500">No books found. Use 'Bulk Import' or 'Add Book'.</p>`;
-                return;
-            }
-            // 퀴즈 번호 순으로 정렬 (숫자로)
-            bookData.sort((a, b) => (parseInt(a.quizNumber) || 0) - (parseInt(b.quizNumber) || 0));
-            bookData.forEach(book => {
-                adminBookListContainer.innerHTML += `
-                <div class="admin-list-item">
-                    <div>
-                        <p class="title">${book.title || 'No Title'} (Quiz: ${book.quizNumber})</p>
-                        <p class="detail">Level: ${book.level || 'N/A'}</p>
-                    </div>
-                    <button class="admin-edit-book-button p-2 bg-stone-200 text-stone-700 rounded-lg hover:bg-stone-300" data-book-quiz="${book.quizNumber}">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                </div>`;
-            });
-            document.querySelectorAll('.admin-edit-book-button').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const quizNum = e.currentTarget.dataset.bookQuiz;
-                    const book = bookData.find(b => b.quizNumber === quizNum);
-                    showBookForm(book);
-                });
-            });
-        }
-
-        // --- Admin Panel: 학생/도서 폼 로직 ---
-        addStudentButton.addEventListener('click', () => showStudentForm(null));
-        addBookButton.addEventListener('click', () => showBookForm(null));
-        closeStudentFormModal.addEventListener('click', () => hideModal(studentFormModal, studentFormModal.querySelector('.modal-content')));
-        closeBookFormModal.addEventListener('click', () => hideModal(bookFormModal, bookFormModal.querySelector('.modal-content')));
-
-        function showStudentForm(student) { // null이면 '추가', 객체면 '수정'
-            studentForm.reset();
-            if (student) {
-                studentFormTitle.textContent = "Edit Student";
-                studentFormIdHidden.value = student.id; // 수정 시엔 ID 변경 못하게
-                studentFormIdInput.value = student.id;
-                studentFormIdInput.readOnly = true;
-                studentFormIdInput.classList.add('bg-stone-200');
-                document.getElementById('student-form-name').value = student.name;
-                document.getElementById('student-form-login').value = student.login;
-                document.getElementById('student-form-pass').value = student.pass;
-                deleteStudentButton.classList.remove('hidden');
-                deleteStudentButton.dataset.studentId = student.id;
-            } else {
-                studentFormTitle.textContent = "Add New Student";
-                studentFormIdHidden.value = '';
-                studentFormIdInput.readOnly = false;
-                studentFormIdInput.classList.remove('bg-stone-200');
-                deleteStudentButton.classList.add('hidden');
-            }
-            showModal(studentFormModal, studentFormModal.querySelector('.modal-content'));
-        }
-        
-        function showBookForm(book) { // null이면 '추가', 객체면 '수정'
-            bookForm.reset();
-            if (book) {
-                bookFormTitle.textContent = "Edit Book";
-                bookFormQuizInput.value = book.quizNumber;
-                bookFormQuizInput.readOnly = true;
-                bookFormQuizInput.classList.add('bg-stone-200');
-                document.getElementById('book-form-title').value = book.title;
-                document.getElementById('book-form-level').value = book.level;
-                deleteBookButton.classList.remove('hidden');
-                deleteBookButton.dataset.bookQuiz = book.quizNumber;
-            } else {
-                bookFormTitle.textContent = "Add New Book";
-                bookFormQuizInput.readOnly = false;
-                bookFormQuizInput.classList.remove('bg-stone-200');
-                deleteBookButton.classList.add('hidden');
-            }
-            showModal(bookFormModal, bookFormModal.querySelector('.modal-content'));
-        }
-
-        // --- Admin Panel: 저장/삭제 로직 ---
-        studentForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = studentFormIdInput.value.trim();
-            if (!id) { alert("Student ID is required."); return; }
-            const data = {
-                name: document.getElementById('student-form-name').value.trim() || "",
-                login: document.getElementById('student-form-login').value.trim() || "",
-                pass: document.getElementById('student-form-pass').value.trim() || "",
-            };
-            try {
-                await setDoc(doc(studentCollectionPath(), id), data);
-                hideModal(studentFormModal, studentFormModal.querySelector('.modal-content'));
-                renderAdminStudentList(); // 목록 새로고침
-            } catch (error) { console.error("Error saving student: ", error); alert("Error saving student."); }
-        });
-        deleteStudentButton.addEventListener('click', async (e) => {
-            const studentId = e.currentTarget.dataset.studentId;
-            if (confirm(`Are you sure you want to delete this student (ID: ${studentId})?\nAll their reading history will remain, but they cannot log in.`)) {
-                try {
-                    await deleteDoc(doc(studentCollectionPath(), studentId));
-                    hideModal(studentFormModal, studentFormModal.querySelector('.modal-content'));
-                    renderAdminStudentList(); // 목록 새로고침
-                } catch (error) { console.error("Error deleting student: ", error); alert("Error deleting student."); }
-            }
-        });
-        
-        bookForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const quizNumber = bookFormQuizInput.value.trim();
-            if (!quizNumber) {
-                alert("Quiz Number is required as a unique ID."); return;
-            }
-            const data = {
-                title: document.getElementById('book-form-title').value.trim() || "",
-                level: document.getElementById('book-form-level').value.trim() || "", 
-            };
-            try {
-                await setDoc(doc(bookCollectionPath(), quizNumber), data);
-                hideModal(bookFormModal, bookFormModal.querySelector('.modal-content'));
-                renderAdminBookList(); // 목록 새로고침
-            } catch (error) { console.error("Error saving book: ", error); alert("Error saving book."); }
-        });
-        deleteBookButton.addEventListener('click', async (e) => {
-            const quizNum = e.currentTarget.dataset.bookQuiz;
-            if (confirm(`Are you sure you want to delete this book (Quiz: ${quizNum})?`)) {
-                try {
-                    await deleteDoc(doc(bookCollectionPath(), quizNum));
-					hideModal(bookFormModal, bookFormModal.querySelector('.modal-content'));
-					renderAdminBookList(); // 목록 새로고침
-                } catch (error) { console.error("Error deleting book: ", error); alert("Error deleting book."); }
-            }
-        });
-        
-        // --- [v21] Admin Panel: 일괄 등록 로직 (FIXED) ---
-        function parseTSV(text) {
-            const lines = text.trim().split('\n');
-            return lines.map(line => line.split('\t').map(cell => cell.trim()));
-        }
-        
-        document.getElementById('bulk-import-student').addEventListener('click', async (e) => {
-            const button = e.currentTarget;
-            button.disabled = true; button.innerHTML = '<div class="loader !w-6 !h-6 !border-2 mx-auto"></div>';
-            bulkImportFeedback.textContent = '';
-            
-            const inputText = document.getElementById('student-input').value;
-            const rows = parseTSV(inputText);
-            
-            const allParsedStudents = rows.map(row => {
-                return { 
-                    id: row[0] || "", 
-                    name: row[1] || "", 
-                    login: row[2] || "", 
-                    pass: row[3] || "" 
-                };
-            });
-            
-            // [v21] id, name, login, pass 모두 있어야 유효함
-            const students = allParsedStudents.filter(student => 
-                student.id && student.name && student.login && student.pass
-            );
-            const skippedCount = allParsedStudents.length - students.length;
-
-            if (students.length === 0) {
-                let errorMsg = 'No valid data found to import.';
-                if (skippedCount > 0) {
-                    errorMsg += ` (${skippedCount} rows were skipped due to missing data.)`;
-                }
-                bulkImportFeedback.textContent = errorMsg;
-                button.disabled = false; button.innerHTML = 'Save Students to DB'; return;
-            }
-            
-            bulkImportFeedback.textContent = `Importing ${students.length} students... 0%`;
-            try {
-                const batch = writeBatch(db);
-                students.forEach((student, index) => {
-                    const docRef = doc(studentCollectionPath(), student.id);
-                    batch.set(docRef, { name: student.name, login: student.login, pass: student.pass });
-                });
-                await batch.commit();
-                
-                await fetchStudentsFromDB(); // 로컬 데이터 새로고침
-                
-                let successMsg = `Successfully imported ${students.length} students!`;
-                if (skippedCount > 0) {
-                    successMsg += ` (${skippedCount} rows were skipped due to missing data.)`;
-                }
-                bulkImportFeedback.textContent = successMsg;
-                document.getElementById('student-input').value = '';
-            } catch (error) {
-                console.error("Error bulk importing students: ", error);
-                bulkImportFeedback.textContent = 'Error during import. Check console.';
-            }
-            button.disabled = false; button.innerHTML = 'Save Students to DB';
-        });
-
-        document.getElementById('bulk-import-book').addEventListener('click', async (e) => {
-            const button = e.currentTarget;
-            button.disabled = true; button.innerHTML = '<div class="loader !w-6 !h-6 !border-2 mx-auto"></div>';
-            bulkImportFeedback.textContent = '';
-            
-            const inputText = document.getElementById('book-input').value;
-            const rows = parseTSV(inputText);
-            
-            const allParsedBooks = rows.map(row => {
-                return { 
-                    level: row[0] || "", 
-                    title: row[1] || "", 
-                    quizNumber: row[2] || "" 
-                };
-            });
-            
-            // [v21] 퀴즈번호, 제목, 레벨이 모두 있고, 레벨이 '숫자'로 변환 가능한 것만 필터링
-            const books = allParsedBooks.filter(book => 
-                book.quizNumber && 
-                book.title && 
-                book.level && 
-                !isNaN(parseFloat(book.level))
-            );
-            const skippedCount = allParsedBooks.length - books.length;
-            
-            if (books.length === 0) {
-                let errorMsg = 'No valid data found to import.';
-                if (skippedCount > 0) {
-                    errorMsg += ` (${skippedCount} rows were skipped due to missing data.)`;
-                }
-                bulkImportFeedback.textContent = errorMsg;
-                button.disabled = false; button.innerHTML = 'Save Books to DB'; return;
-            }
-            
-            bulkImportFeedback.textContent = `Importing ${books.length} books... 0%`;
-            try {
-                // Firestore batch는 500개 제한이 있음. 500개씩 나눠서 처리
-                for (let i = 0; i < books.length; i += 499) {
-                    const batch = writeBatch(db);
-                    const chunk = books.slice(i, i + 499);
-                    chunk.forEach((book, index) => {
-                        const docRef = doc(bookCollectionPath(), book.quizNumber); // 퀴즈번호를 ID로 사용
-                        batch.set(docRef, { title: book.title, level: book.level });
-                    });
-                    await batch.commit();
-                    bulkImportFeedback.textContent = `Importing ${books.length} books... ${Math.round(((i + chunk.length) / books.length) * 100)}%`;
-                }
-                
-                await fetchBooksFromDB(); // 로컬 데이터 새로고침
-                
-                let successMsg = `Successfully imported ${books.length} books!`;
-                if (skippedCount > 0) {
-                    successMsg += ` (${skippedCount} rows were skipped due to missing data.)`;
-                }
-                bulkImportFeedback.textContent = successMsg;
-                document.getElementById('book-input').value = '';
-            } catch (error) {
-                console.error("Error bulk importing books: ", error);
-                bulkImportFeedback.textContent = 'Error during import. Check console.';
-            }
-            button.disabled = false; button.innerHTML = 'Save Books to DB';
-        });
-
-        // --- Firebase 초기화 및 앱 시작 ---
-        async function initializeAppAndFirebase() {
-            try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                setLogLevel('Debug');
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                console.log("Firebase initialized and user authenticated.");
-                
-                await fetchStudentsFromDB();
-                await fetchBooksFromDB();
-                
-                renderStudentSelection();
-                appLoadingScreen.classList.add('hidden');
-                studentScreen.classList.remove('hidden');
-
-            } catch (error) {
-                console.error("Firebase Initialization Error:", error);
-                appLoadingStatus.textContent = "Error: Could not connect to the database. Please check the configuration.";
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', initializeAppAndFirebase);
-    </script>
-</body>
-</html>
+            if (!db) return [];...

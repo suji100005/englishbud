@@ -1,0 +1,5 @@
+{
+  "name": "Student Reading Hub",
+  "description": "An interactive platform for students to select books, listen to audio, take quizzes, and get vocabulary help. Features an admin panel for managing content.",
+  "requestFramePermissions": []
+}
